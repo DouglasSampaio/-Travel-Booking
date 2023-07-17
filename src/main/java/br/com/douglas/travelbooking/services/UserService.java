@@ -40,6 +40,10 @@ public class UserService {
         return repository.save(user);
     }
 	
+	public void deleteUser(User user) {
+	    repository.delete(user);
+	}
+	
 	public User fromDTO(UserDTO userDto) {
 		return new User(
 				userDto.getIdUser(),
