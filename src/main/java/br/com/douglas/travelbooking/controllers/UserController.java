@@ -45,27 +45,20 @@ public class UserController {
 
 	@PostMapping
 	public ResponseEntity<UserCreateDTO> insert(@RequestBody UserDTO objUserDto) {
-		
-//		try {
-//			Optional<Cartao> existingCartao = service.findByNumero(numeroCartao);
-//			if (existingCartao.isPresent()) {
-//				return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
-//			}
-//			Cartao obj = service.newCartaoDto(cartaoDTO);
-//			obj = service.insert(obj);
-//
-//			return ResponseEntity.status(HttpStatus.CREATED).body(response);
-//		} catch (Exception e) {
-//			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).body(response);
-//		}
-		int id = (int) service.getUserCount();
-		String nome = objUserDto.getNome();
-		String email = objUserDto.getEmail();
-		UserCreateDTO response = new UserCreateDTO(id, nome, email);
-		User objUser = service.fromDTO(objUserDto);
-		objUser.setIdUser(id);
-		objUser = service.insert(objUser);
-		return ResponseEntity.status(HttpStatus.CREATED).body(response);
+	    String email = objUserDto.getEmail();
+
+	    User existingUserEmail = service.findByEmail(email);
+	    if (existingUserEmail != null) {
+	        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+	    }
+	    
+	    int id = (int) service.getUserCount();
+	    String nome = objUserDto.getNome();
+	    UserCreateDTO response = new UserCreateDTO(id, nome, email);
+	    User objUser = service.fromDTO(objUserDto);
+	    objUser.setIdUser(id);
+	    objUser = service.insert(objUser);
+	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
 }

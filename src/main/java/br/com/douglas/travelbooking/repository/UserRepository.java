@@ -9,7 +9,7 @@ import br.com.douglas.travelbooking.model.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
-	//Optional<User> findById(int idUser);
 	@Query("{ 'idUser' : ?0 }")
     User findByUserId(int idUser);
+	User findByEmail(String email);
 }

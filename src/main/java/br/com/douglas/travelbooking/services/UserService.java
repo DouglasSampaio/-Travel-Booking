@@ -27,11 +27,11 @@ public class UserService {
 	public User findByUserId(int idUser) {
 	    return repository.findByUserId(idUser);
 	}
-//	public User findByEmail(String email) {
-//		User obj = repository;
-//		return obj;
-//	}
-//	
+	
+	public User findByEmail(String email) {
+	    return repository.findByEmail(email);
+	}
+	 
 	public long getUserCount() {
         return repository.count() + 1;
     }
