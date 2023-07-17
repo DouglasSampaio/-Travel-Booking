@@ -33,7 +33,8 @@ public class UserService {
 	}
 	 
 	public long getUserCount() {
-        return repository.count() + 1;
+        User user = repository.findTopByOrderByIdUserDesc();
+        return (user != null) ? user.getIdUser() + 1 : 1;
     }
 	
 	public User update(User user) {

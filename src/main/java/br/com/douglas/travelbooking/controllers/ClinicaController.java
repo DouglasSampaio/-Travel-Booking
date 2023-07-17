@@ -22,7 +22,7 @@ public class ClinicaController {
 	@PostMapping
 	public ResponseEntity<Clinica> insert(@RequestBody Clinica objClinicaDto) {
 	 
-	    int id = (int) service.getClinicaCount();
+	    int id = service.getClinicaCount();
 	    String nome = objClinicaDto.getNomeClinica();
 	    Clinica response = new Clinica(id, nome);
 	    Clinica objUser = service.fromDTO(objClinicaDto);

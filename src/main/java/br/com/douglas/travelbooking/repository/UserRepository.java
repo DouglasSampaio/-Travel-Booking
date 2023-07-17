@@ -12,4 +12,5 @@ public interface UserRepository extends MongoRepository<User, String> {
 	@Query("{ 'idUser' : ?0 }")
     User findByUserId(int idUser);
 	User findByEmail(String email);
+	User findTopByOrderByIdUserDesc();
 }

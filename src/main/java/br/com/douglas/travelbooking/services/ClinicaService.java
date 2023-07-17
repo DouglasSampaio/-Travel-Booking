@@ -17,13 +17,9 @@ public class ClinicaService {
 	}
 	
 	public int getClinicaCount() {
-        Clinica lastClinica = repository.findTopByOrderByIdClinicaDesc();
-        if (lastClinica != null) {
-            return lastClinica.getIdClinica() + 1;
-        } else {
-            return 1;
-        }
-    }
+	    Clinica lastClinica = repository.findTopByOrderByIdClinicaDesc();
+	    return (lastClinica != null) ? lastClinica.getIdClinica() + 1 : 1;
+	}
 
 	
 	public Clinica fromDTO(Clinica clinicaDto) {
