@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -42,6 +43,7 @@ public class UserController {
 	        return ResponseEntity.notFound().build();
 	    }
 	}
+	
 
 	@PostMapping
 	public ResponseEntity<UserCreateDTO> insert(@RequestBody UserDTO objUserDto) {
@@ -60,5 +62,29 @@ public class UserController {
 	    objUser = service.insert(objUser);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+	@PutMapping("/{idUser}")
+	 public ResponseEntity<UserCreateDTO> atualizarUsuario(@PathVariable int idUser, @RequestBody UserDTO userDtoAtualizado){
+		String email = userDtoAtualizado.getEmail();
+
+		User usuarioExistente = service.findByUserId(idUser);
+	    User existingUserEmail = service.findByEmail(email);
+        if (usuarioExistente == null) {
+            return ResponseEntity.notFound().build();
+        }
+        if (existingUserEmail != null) {
+	        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+	    }
+        usuarioExistente.setNome(userDtoAtualizado.getNome());
+        usuarioExistente.setEmail(userDtoAtualizado.getEmail());
+        
+        User usuarioAtualizado = service.update(usuarioExistente);
+        
+        UserCreateDTO response = new UserCreateDTO(usuarioAtualizado.getIdUser(), usuarioAtualizado.getNome(), usuarioAtualizado.getEmail());
+
+        return ResponseEntity.ok(response);
+	}
+	
+	
+	
 
 }

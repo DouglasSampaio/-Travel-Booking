@@ -36,6 +36,10 @@ public class UserService {
         return repository.count() + 1;
     }
 	
+	public User update(User user) {
+        return repository.save(user);
+    }
+	
 	public User fromDTO(UserDTO userDto) {
 		return new User(
 				userDto.getIdUser(),
