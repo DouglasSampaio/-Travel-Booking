@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import br.com.douglas.travelbooking.dto.ClinicaCreateDTO;
 import br.com.douglas.travelbooking.dto.ClinicaDTO;
 import br.com.douglas.travelbooking.model.Clinica;
 import br.com.douglas.travelbooking.model.Endereco;
@@ -37,13 +38,29 @@ public class ClinicaService {
 	    return repository.findByClinicaId(idClinica);
 	}
 	
-	public int getClinicaCount() {
+	public int getClinicaCount() {		
 	    Clinica lastClinica = repository.findTopByOrderByIdClinicaDesc();
 	    return (lastClinica != null) ? lastClinica.getIdClinica() + 1 : 1;
 	}
 
 	
 	public Clinica clinicaDTO(ClinicaDTO clinicaDto) {
+		Endereco apiCep = consultarCep(clinicaDto.getEndereco().getCep());
+	    return new Clinica(
+	            clinicaDto.getIdClinica(),
+	            clinicaDto.getNomeClinica(),
+	            new Endereco(
+	                clinicaDto.getEndereco().getNumero(),
+	                clinicaDto.getEndereco().getCep(),
+	                apiCep.getLogradouro(),
+	                apiCep.getComplemento(),
+	                apiCep.getBairro(),
+	                apiCep.getUf()
+	            )
+	    );
+	}
+	
+	public Clinica clinicaCreateDTO(ClinicaCreateDTO clinicaDto) {
 		Endereco apiCep = consultarCep(clinicaDto.getCep());
 	    return new Clinica(
 	            clinicaDto.getIdClinica(),

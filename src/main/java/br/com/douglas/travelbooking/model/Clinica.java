@@ -19,15 +19,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Clinica {
 
-    @Id
-    @NonNull
-    private int idClinica;
+	@Id
+	@NonNull
+	private int idClinica;
 
-    @NonNull
-    private String nomeClinica;
+	@NonNull
+	private String nomeClinica;
 
-    
-    private Endereco endereco;
-
+	private Endereco endereco;
 
 }

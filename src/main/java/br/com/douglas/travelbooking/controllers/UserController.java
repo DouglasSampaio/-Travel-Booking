@@ -33,70 +33,69 @@ public class UserController {
 		List<UserDTO> listDto = list.stream().map(listUser -> new UserDTO(listUser)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDto);
 	}
-	
+
 	@GetMapping("/{idUser}")
 	public ResponseEntity<UserCreateDTO> findByUserId(@PathVariable int idUser) {
-	    User user = service.findByUserId(idUser);
-	    if (user != null) {
-	    	UserCreateDTO userDto = new UserCreateDTO(user.getIdUser(), user.getNome(), user.getEmail());
-	        return ResponseEntity.ok(userDto);
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+		User user = service.findByUserId(idUser);
+		if (user != null) {
+			UserCreateDTO userDto = new UserCreateDTO(user.getIdUser(), user.getNome(), user.getEmail());
+			return ResponseEntity.ok(userDto);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
 
 	@PostMapping
 	public ResponseEntity<UserCreateDTO> insert(@RequestBody UserDTO objUserDto) {
-	    String email = objUserDto.getEmail();
+		String email = objUserDto.getEmail();
 
-	    User existingUserEmail = service.findByEmail(email);
-	    if (existingUserEmail != null) {
-	        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-	    }
-	    
-	    int id = (int) service.getUserCount();
-	    String nome = objUserDto.getNome();
-	    UserCreateDTO response = new UserCreateDTO(id, nome, email);
-	    User objUser = service.fromDTO(objUserDto);
-	    objUser.setIdUser(id);
-	    objUser = service.insert(objUser);
-	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
+		User existingUserEmail = service.findByEmail(email);
+		if (existingUserEmail != null) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+		}
+
+		int id = (int) service.getUserCount();
+		String nome = objUserDto.getNome();
+		UserCreateDTO response = new UserCreateDTO(id, nome, email);
+		User objUser = service.fromDTO(objUserDto);
+		objUser.setIdUser(id);
+		objUser = service.insert(objUser);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
+
 	@PutMapping("/{idUser}")
-	 public ResponseEntity<UserCreateDTO> atualizarUsuario(@PathVariable int idUser, @RequestBody UserDTO userDtoAtualizado){
+	public ResponseEntity<UserCreateDTO> atualizarUsuario(@PathVariable int idUser,
+			@RequestBody UserDTO userDtoAtualizado) {
 		String email = userDtoAtualizado.getEmail();
 
 		User usuarioExistente = service.findByUserId(idUser);
-	    User existingUserEmail = service.findByEmail(email);
-        if (usuarioExistente == null) {
-            return ResponseEntity.notFound().build();
-        }
-        if (existingUserEmail != null) {
-	        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
-	    }
-        usuarioExistente.setNome(userDtoAtualizado.getNome());
-        usuarioExistente.setEmail(userDtoAtualizado.getEmail());
-        
-        User usuarioAtualizado = service.update(usuarioExistente);
-        
-        UserCreateDTO response = new UserCreateDTO(usuarioAtualizado.getIdUser(), usuarioAtualizado.getNome(), usuarioAtualizado.getEmail());
+		User existingUserEmail = service.findByEmail(email);
+		if (usuarioExistente == null) {
+			return ResponseEntity.notFound().build();
+		}
+		if (existingUserEmail != null) {
+			return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+		}
+		usuarioExistente.setNome(userDtoAtualizado.getNome());
+		usuarioExistente.setEmail(userDtoAtualizado.getEmail());
 
-        return ResponseEntity.ok(response);
+		User usuarioAtualizado = service.update(usuarioExistente);
+
+		UserCreateDTO response = new UserCreateDTO(usuarioAtualizado.getIdUser(), usuarioAtualizado.getNome(),
+				usuarioAtualizado.getEmail());
+
+		return ResponseEntity.ok(response);
 	}
-	
+
 	@DeleteMapping("/{idUser}")
 	public ResponseEntity<Void> deleteUser(@PathVariable int idUser) {
-	    User existingUser = service.findByUserId(idUser);
-	    if (existingUser != null) {
-	        service.deleteUser(existingUser);
-	        return ResponseEntity.noContent().build();
-	    } else {
-	        return ResponseEntity.notFound().build();
-	    }
+		User existingUser = service.findByUserId(idUser);
+		if (existingUser != null) {
+			service.deleteUser(existingUser);
+			return ResponseEntity.noContent().build();
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	
-	
-	
 
 }
