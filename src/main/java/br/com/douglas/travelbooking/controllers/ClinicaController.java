@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.douglas.travelbooking.dto.ClinicaDTO;
 import br.com.douglas.travelbooking.model.Clinica;
 import br.com.douglas.travelbooking.services.ClinicaService;
 
@@ -20,14 +21,22 @@ public class ClinicaController {
 	
 	
 	@PostMapping
-	public ResponseEntity<Clinica> insert(@RequestBody Clinica objClinicaDto) {
+	public ResponseEntity<ClinicaDTO> insert(@RequestBody ClinicaDTO objClinicaDto) {
 	 
 	    int id = service.getClinicaCount();
-	    String nome = objClinicaDto.getNomeClinica();
-	    Clinica response = new Clinica(id, nome);
-	    Clinica objUser = service.fromDTO(objClinicaDto);
-	    objUser.setIdClinica(id);
-	    objUser = service.insert(objUser);
+	    ClinicaDTO response = new ClinicaDTO(
+	    		id,
+	    		objClinicaDto.getNomeClinica(),
+	    		objClinicaDto.getNumero(),
+	    		objClinicaDto.getCep(),
+	    		objClinicaDto.getLogradouro(),
+	    		objClinicaDto.getComplemento(),
+	    		objClinicaDto.getBairro(),
+	    		objClinicaDto.getUf()
+	    		);
+	    Clinica objClinica = service.clinicaDTO(objClinicaDto);
+	    objClinica.setIdClinica(id);
+	    objClinica = service.insert(objClinica);
 	    return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 
