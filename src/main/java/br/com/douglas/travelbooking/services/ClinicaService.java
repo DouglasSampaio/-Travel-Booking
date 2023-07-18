@@ -1,5 +1,7 @@
 package br.com.douglas.travelbooking.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +25,16 @@ public class ClinicaService {
 	@Value("${api.cep.url}")
     private String cepApiUrl;
 	
+	public  List<Clinica> findAll(){
+		return repository.findAll();
+	}
+	
 	public Clinica insert(Clinica obj) {
 		return repository.insert(obj);
+	}
+	
+	public Clinica findByClinicaId(int idClinica) {
+	    return repository.findByClinicaId(idClinica);
 	}
 	
 	public int getClinicaCount() {

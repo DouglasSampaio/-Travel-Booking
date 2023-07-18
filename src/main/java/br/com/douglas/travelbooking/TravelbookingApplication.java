@@ -15,7 +15,7 @@ public class TravelbookingApplication {
 		SpringApplication.run(TravelbookingApplication.class, args);
 	}
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
+    RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
 }
