@@ -1,7 +1,10 @@
 package br.com.douglas.travelbooking.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import br.com.douglas.travelbooking.dto.ClinicaDTO;
 import br.com.douglas.travelbooking.model.Clinica;
@@ -14,6 +17,12 @@ public class ClinicaService {
 	@Autowired
 	private ClinicaRepository repository;
 	
+	@Autowired
+    private RestTemplate restTemplate;
+	
+	@Value("${api.cep.url}")
+    private String cepApiUrl;
+	
 	public Clinica insert(Clinica obj) {
 		return repository.insert(obj);
 	}
@@ -25,18 +34,32 @@ public class ClinicaService {
 
 	
 	public Clinica clinicaDTO(ClinicaDTO clinicaDto) {
+		Endereco apiCep = consultarCep(clinicaDto.getCep());
 	    return new Clinica(
 	            clinicaDto.getIdClinica(),
 	            clinicaDto.getNomeClinica(),
 	            new Endereco(
 	                clinicaDto.getNumero(),
 	                clinicaDto.getCep(),
-	                clinicaDto.getLogradouro(),
-	                clinicaDto.getComplemento(),
-	                clinicaDto.getBairro(),
-	                clinicaDto.getUf()
+	                apiCep.getLogradouro(),
+	                apiCep.getComplemento(),
+	                apiCep.getBairro(),
+	                apiCep.getUf()
 	            )
 	    );
 	}
+	
+    public Endereco consultarCep(String cep) {
+
+        String url = cepApiUrl + cep + "/json";
+        
+        ResponseEntity<Endereco> response = restTemplate.getForEntity(url, Endereco.class);
+        
+        if (response.getStatusCode().is2xxSuccessful()) {
+            return response.getBody();
+        } else {
+            throw new RuntimeException("Não foi possível consultar o CEP: " + cep);
+        }
+    }
 
 }

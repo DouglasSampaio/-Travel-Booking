@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.douglas.travelbooking.dto.ClinicaDTO;
 import br.com.douglas.travelbooking.model.Clinica;
+import br.com.douglas.travelbooking.model.Endereco;
 import br.com.douglas.travelbooking.services.ClinicaService;
 
 @RestController
@@ -22,17 +23,18 @@ public class ClinicaController {
 	
 	@PostMapping
 	public ResponseEntity<ClinicaDTO> insert(@RequestBody ClinicaDTO objClinicaDto) {
-	 
+		
+		Endereco apiCep = service.consultarCep(objClinicaDto.getCep());
 	    int id = service.getClinicaCount();
 	    ClinicaDTO response = new ClinicaDTO(
 	    		id,
 	    		objClinicaDto.getNomeClinica(),
 	    		objClinicaDto.getNumero(),
 	    		objClinicaDto.getCep(),
-	    		objClinicaDto.getLogradouro(),
-	    		objClinicaDto.getComplemento(),
-	    		objClinicaDto.getBairro(),
-	    		objClinicaDto.getUf()
+	    		apiCep.getLogradouro(),
+	    		apiCep.getComplemento(),
+	    		apiCep.getBairro(),
+	    		apiCep.getUf()
 	    		);
 	    Clinica objClinica = service.clinicaDTO(objClinicaDto);
 	    objClinica.setIdClinica(id);
